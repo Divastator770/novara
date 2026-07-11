@@ -376,6 +376,25 @@
     opacity:1;
     pointer-events:auto;
   }
+  .mobile-menu-close{
+    position:absolute;
+    top:24px; right:24px;
+    width:44px; height:44px;
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+    transition:background .3s ease, transform .3s ease, border-color .3s ease;
+  }
+  .mobile-menu-close:hover{
+    background:rgba(255,255,255,.16);
+    border-color:var(--gold);
+    transform:rotate(90deg);
+  }
   .mobile-menu a{
     font-family:'Fraunces',serif;
     font-size:30px;
@@ -1181,6 +1200,9 @@
 </header>
 
 <div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
   <a href="#about">About</a>
   <a href="#courses">Courses</a>
   <a href="#register">Registration</a>
@@ -1620,14 +1642,26 @@
   // mobile menu toggle
   const navToggle = document.getElementById('navToggle');
   const mobileMenu = document.getElementById('mobileMenu');
-  navToggle.addEventListener('click', () => {
-    navToggle.classList.toggle('active');
-    mobileMenu.classList.toggle('open');
-  });
-  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+  const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+  function closeMobileMenu(){
     navToggle.classList.remove('active');
     mobileMenu.classList.remove('open');
-  }));
+  }
+  function openMobileMenu(){
+    navToggle.classList.add('active');
+    mobileMenu.classList.add('open');
+  }
+
+  navToggle.addEventListener('click', () => {
+    if(mobileMenu.classList.contains('open')) closeMobileMenu();
+    else openMobileMenu();
+  });
+  mobileMenuClose.addEventListener('click', closeMobileMenu);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMobileMenu));
+  document.addEventListener('keydown', (e) => {
+    if(e.key === 'Escape') closeMobileMenu();
+  });
 
   // ambient background parallax on scroll + mouse
   if(!prefersReduced){
